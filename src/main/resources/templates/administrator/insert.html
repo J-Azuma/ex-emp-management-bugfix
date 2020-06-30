@@ -58,7 +58,7 @@
 							<div class="form-group">
 								<div class="row">
 									<div class="col-sm-12">
-									<div th:errors="*{mailAddress}" class="error-messages"></div>
+									<div th:errors="*{mailAddress}" class="error-messages" th:text="${duplicationError}"></div>
 										<label for="mailAddress"> メールアドレス: </label> 
 										 <input type="text" name="mailAddress"
 											id="mailAddress" class="form-control"

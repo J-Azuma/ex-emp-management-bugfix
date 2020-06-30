@@ -54,14 +54,14 @@ public class AdministratorRepository {
 	}
 
 	/**
-	 * 管理者情報を挿入します.
+	 * 管理者情報を挿入します. メールアドレスが既存のものと重複する場合、エラーが発生する
 	 * 
 	 * @param administrator 管理者情報
 	 */
 	public void insert(Administrator administrator) {
-		SqlParameterSource param = new BeanPropertySqlParameterSource(administrator);
-		String sql = "insert into administrators(name,mail_address,password)values(:name,:mailAddress,:password);";
-		template.update(sql, param);
+			String insertSql = "insert into administrators(name,mail_address,password)values(:name,:mailAddress,:password);";
+			SqlParameterSource insertParam = new BeanPropertySqlParameterSource(administrator);
+			template.update(insertSql, insertParam);
 	}
 
 	/**
