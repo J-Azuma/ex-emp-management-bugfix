@@ -52,6 +52,17 @@ public class EmployeeController {
 		model.addAttribute("employeeList", employeeList);
 		return "employee/list";
 	}
+	
+	@RequestMapping("/fizzySearchByName")
+	public String fizzySearchByName(String name, Model model) {
+		List<Employee> employeeList = employeeService.fizzySearchByName(name);
+		if (employeeList.size() == 0) {
+			model.addAttribute("message", "1件もありませんでした。");
+			employeeList = employeeService.showList();
+		}
+		model.addAttribute("employeeList", employeeList);
+		return "employee/list";
+	}
 
 	
 	/////////////////////////////////////////////////////

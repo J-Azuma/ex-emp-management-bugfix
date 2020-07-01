@@ -54,16 +54,21 @@
 		<ol class="breadcrumb">
 			<li class="active"><a href="list.html" th:href="@{/employee/showList}">従業員リスト</a></li>
 		</ol>
-
-		<!-- table -->
+		
 		<div class="row">
+		<!-- table -->
 			<div
 				class="table-responsive col-lg-offset-2 col-lg-8 col-md-offset-2 col-md-8 col-sm-12 col-xs-12">
 
 <!-- ここから上を編集する必要はありません -->
 
+		<form th:action="@{/employee/fizzySearchByName}" method="post"><label for="search">従業員検索 </label>
+		<input type="text" name="name" id="search" />
+		<button>検索</button>
+		</form>
 <!-- ここにモックのtable要素を貼り付けます -->
 
+<div th:if="${message != null}"><span th:text="${message}" style="color:red"></span></div>
 				<table class="table table-striped">
 					<thead>
 						<tr>
