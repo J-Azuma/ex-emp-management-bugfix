@@ -78,6 +78,10 @@ public class AdministratorController {
 			FieldError emailError = new FieldError(result.getObjectName() , "mailAddress", "メールアドレスが重複しています");
 			result.addError(emailError);
 		}
+		if (!(form.getPassword().equals(form.getPasswordConfirm()))) {
+			FieldError passwordConfirmError = new FieldError(result.getObjectName(), "passwordConfirm", "確認用パスワードが一致していません");
+			result.addError(passwordConfirmError);
+		}
 		if (result.hasErrors()) {
 			return toInsert(model);
 		}
@@ -118,6 +122,7 @@ public class AdministratorController {
 			model.addAttribute("errorMessage", "メールアドレスまたはパスワードが不正です。");
 			return toLogin();
 		}
+		session.setAttribute("administrator", administrator);
 		return "forward:/employee/showList";
 	}
 	
