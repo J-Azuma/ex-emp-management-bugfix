@@ -140,4 +140,11 @@ public class AdministratorController {
 		return "redirect:/";
 	}
 	
+	@RequestMapping("/exception")
+	public String exception() {
+		int num = 10 / 0;
+		System.out.println(num);
+		return "insert";
+	}
+	
 }
