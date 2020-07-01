@@ -53,6 +53,13 @@ public class EmployeeController {
 		return "employee/list";
 	}
 	
+	/**
+	 * 従業員を名前であいまい検索.
+	 * 
+	 * @param name 検索用の名前
+	 * @param model リクエストスコープに値を渡すためのオブジェクト
+	 * @return 従業員一覧画面に検索結果を表示
+	 */
 	@RequestMapping("/fizzySearchByName")
 	public String fizzySearchByName(String name, Model model) {
 		List<Employee> employeeList = employeeService.fizzySearchByName(name);

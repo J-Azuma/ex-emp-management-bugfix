@@ -84,9 +84,15 @@ public class EmployeeRepository {
 		template.update(updateSql, param);
 	}
 	
+	/**
+	 * 従業員を名前であいまい検索.
+	 * 
+	 * @param name 検索用の名前
+	 * @return 検索結果を格納したリスト
+	 */
 	public List<Employee> fizzySearchByName(String name) {
 		name = "%" + name + "%";
-		String sql = "select id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count FROM employees WHERE name like :name;";
+		String sql = "select id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count FROM employees WHERE name like :name order by hire_date;";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("name", name);
 		List<Employee> employeeList = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
 		return employeeList;
