@@ -1,6 +1,9 @@
 package jp.co.sample.emp_management.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +12,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import jp.co.sample.emp_management.domain.Employee;
 import jp.co.sample.emp_management.form.UpdateEmployeeForm;
@@ -109,5 +114,35 @@ public class EmployeeController {
 		employee.setDependentsCount(form.getIntDependentsCount());
 		employeeService.update(employee);
 		return "redirect:/employee/showList";
+	}
+	
+	/**
+	 * 従業員検索のオートコンプリート用のメソッド.
+	 * 
+	 * @param name 入力値
+	 * @return jsにマップを渡す
+	 */
+	@ResponseBody
+	@RequestMapping(value="/suggest", method= RequestMethod.POST)
+	public Map<String, String[]> suggest(String name) {
+		Map<String, String[]> map = new HashMap<>();
+		List<String> employeeNameList = new ArrayList<>();
+		List<Employee> employeeList = new ArrayList<>();
+		if (employeeService.fizzySearchByName(name).size() == 0) {
+			employeeList = employeeService.showList();
+		} else {
+			employeeList = employeeService.fizzySearchByName(name);
+		}
+		
+		for (Employee employee : employeeList) {
+			employeeNameList.add(employee.getName());
+		}
+		String employeeNameArray[] = new String[employeeList.size()];
+		for (int i = 0; i < employeeNameArray.length; i++) {
+			employeeNameArray[i] = employeeNameList.get(i);
+		}
+		
+		map.put("employeeNameArray", employeeNameArray);
+		return map;
 	}
 }
