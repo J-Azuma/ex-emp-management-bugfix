@@ -12,7 +12,7 @@ $(function() {
 			}).done(function(data) {
 				console.log(data);
 				    $( "#search-name" ).autocomplete({
-				      source: data.employeeNameArray
+				      source: data.employeeNameList
 				    });
 			}).fail(function(XMLHttpRequest, textStatus, errorThrown) {
 				console.log("XMLHttpRequest : " + XMLHttpRequest.status);

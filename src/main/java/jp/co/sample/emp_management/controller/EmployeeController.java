@@ -124,25 +124,14 @@ public class EmployeeController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="/suggest", method= RequestMethod.POST)
-	public Map<String, String[]> suggest(String name) {
-		Map<String, String[]> map = new HashMap<>();
+	public Map<String, List<String>> suggest() {
+		Map<String, List<String>> map = new HashMap<>();
 		List<String> employeeNameList = new ArrayList<>();
-		List<Employee> employeeList = new ArrayList<>();
-		if (employeeService.fizzySearchByName(name).size() == 0) {
-			employeeList = employeeService.showList();
-		} else {
-			employeeList = employeeService.fizzySearchByName(name);
-		}
-		
+		List<Employee> employeeList = employeeService.showList();
 		for (Employee employee : employeeList) {
 			employeeNameList.add(employee.getName());
 		}
-		String employeeNameArray[] = new String[employeeList.size()];
-		for (int i = 0; i < employeeNameArray.length; i++) {
-			employeeNameArray[i] = employeeNameList.get(i);
-		}
-		
-		map.put("employeeNameArray", employeeNameArray);
+		map.put("employeeNameList", employeeNameList);
 		return map;
 	}
 }
