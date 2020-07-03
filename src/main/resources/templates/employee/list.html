@@ -28,7 +28,7 @@
 							class="icon-bar"></span> <span class="icon-bar"></span> <span
 							class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="list.html" th:href="@{/employee/showList}"> 
+					<a class="navbar-brand" href="list.html" th:href="@{'/employee/showList/1}"> 
 						<!-- 企業ロゴ -->
 						<img src="../../static/img/header_logo_small.png" th:src="@{/img/header_logo_small.png}">
 					</a>
@@ -38,7 +38,7 @@
 				<div class="collapse navbar-collapse"
 					id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li class="active"><a href="list.html" th:href="@{/employee/showList}">従業員管理</a></li>
+						<li class="active"><a href="list.html" th:href="@{'/employee/showList/1}">従業員管理</a></li>
 					</ul>
 					<p class="navbar-text navbar-right">
 						<span th:text="${session.administrator.name}">山田太郎</span>さんこんにちは！
@@ -64,7 +64,7 @@
 <!-- ここから上を編集する必要はありません -->
 
 		<form th:action="@{/employee/fizzySearchByName}" method="post"><label for="search-name">従業員検索 </label>
-		<input type="text" id="search-name" />
+		<input type="text" name="name" id="search-name" />
 		<button>検索</button>
 		</form>
 <!-- ここにモックのtable要素を貼り付けます -->
@@ -94,8 +94,10 @@
 						</tr>
 					</tbody>
 				</table>
-
-
+<!-- set pagenation button here -->
+<span th:each="page:  ${totalPages}">
+<a th:href="@{'/employee/showList?page=' + ${page}}" th:text="${page}"></a>
+</span>
 <!-- ここから下を編集する必要はありません -->
 
 			</div>

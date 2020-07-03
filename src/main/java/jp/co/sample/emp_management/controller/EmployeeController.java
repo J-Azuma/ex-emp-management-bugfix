@@ -52,9 +52,20 @@ public class EmployeeController {
 	 * @return 従業員一覧画面
 	 */
 	@RequestMapping("/showList")
-	public String showList(Model model) {
-		List<Employee> employeeList = employeeService.showList();
+	public String showList(Integer page, Model model) {
+		if (page == null) {
+			page = 1;
+		}
+		List<Employee> employeeList = employeeService.showList(page);
 		model.addAttribute("employeeList", employeeList);
+		
+		List<Integer> totalPages = new ArrayList<>();
+		for (int i = 1; i <= employeeService.getTotalPages(); i++) {
+			totalPages.add(i);
+		}
+		
+		model.addAttribute("totalPages", totalPages);
+		System.out.println(totalPages.size());
 		return "employee/list";
 	}
 	
@@ -66,13 +77,22 @@ public class EmployeeController {
 	 * @return 従業員一覧画面に検索結果を表示
 	 */
 	@RequestMapping("/fizzySearchByName")
-	public String fizzySearchByName(String name, Model model) {
-		List<Employee> employeeList = employeeService.fizzySearchByName(name);
+	public String fizzySearchByName(String name,Model model, Integer page){
+		if (page == null) {
+			page = 1;
+		}
+		List<Employee> employeeList = employeeService.fizzySearchByName(name, page);
 		if (employeeList.size() == 0) {
 			model.addAttribute("message", "1件もありませんでした。");
-			employeeList = employeeService.showList();
+			employeeList = employeeService.showList(page);
+		}
+		
+		List<Integer> totalPages = new ArrayList<>();
+		for (int i = 1; i <= employeeService.getTotalPagesForSearch(name); i++) {
+			totalPages.add(i);
 		}
 		model.addAttribute("employeeList", employeeList);
+		model.addAttribute("totalPages", totalPages);
 		return "employee/list";
 	}
 
@@ -124,14 +144,19 @@ public class EmployeeController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="/suggest", method= RequestMethod.POST)
-	public Map<String, List<String>> suggest() {
+	public Map<String, List<String>> suggest(Integer page) {
+		if (page == null) {
+			page = 1;
+		}
 		Map<String, List<String>> map = new HashMap<>();
 		List<String> employeeNameList = new ArrayList<>();
-		List<Employee> employeeList = employeeService.showList();
+		List<Employee> employeeList = employeeService.showList(page);
 		for (Employee employee : employeeList) {
 			employeeNameList.add(employee.getName());
 		}
 		map.put("employeeNameList", employeeNameList);
 		return map;
 	}
+	
+	
 }

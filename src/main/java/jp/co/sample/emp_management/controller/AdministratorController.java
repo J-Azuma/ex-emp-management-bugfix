@@ -122,7 +122,7 @@ public class AdministratorController {
 			return toLogin();
 		}
 		session.setAttribute("administrator", administrator);
-		return "forward:/employee/showList";
+		return "redirect:/employee/showList";
 	}
 	
 	/////////////////////////////////////////////////////
