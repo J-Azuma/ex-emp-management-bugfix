@@ -96,7 +96,7 @@
 				</table>
 <!-- set pagenation button here -->
 <span th:each="page:  ${totalPages}">
-<span th:if="${name != null}"><a th:href="@{'/employee/showList?page=' + ${page} + '&name=' + ${name}}" th:text="${page}"></a></span>
+ <a th:href="@{'/employee/showList?page=' + ${page} + '&name=' + ${name}}" th:text="${page}"></a>
 </span>
 <!-- ここから下を編集する必要はありません -->
 

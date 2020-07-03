@@ -60,6 +60,11 @@ public class EmployeeController {
 			name = "";
 		}
 		List<Employee> employeeList = employeeService.showList(name, page);
+		if (employeeList.size() == 0) {
+			name = "";
+			employeeList = employeeService.showList(name, page);
+			model.addAttribute("message", "1件も見つかりませんでした");
+		}
 		model.addAttribute("employeeList", employeeList);
 		
 		List<Integer> totalPages = new ArrayList<>();
