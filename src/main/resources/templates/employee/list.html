@@ -63,7 +63,7 @@
 
 <!-- ここから上を編集する必要はありません -->
 
-		<form th:action="@{/employee/fizzySearchByName}" method="post"><label for="search-name">従業員検索 </label>
+		<form th:action="@{/employee/showList}" method="post"><label for="search-name">従業員検索 </label>
 		<input type="text" name="name" id="search-name" />
 		<button>検索</button>
 		</form>
@@ -96,7 +96,7 @@
 				</table>
 <!-- set pagenation button here -->
 <span th:each="page:  ${totalPages}">
-<a th:href="@{'/employee/showList?page=' + ${page}}" th:text="${page}"></a>
+<span th:if="${name != null}"><a th:href="@{'/employee/showList?page=' + ${page} + '&name=' + ${name}}" th:text="${page}"></a></span>
 </span>
 <!-- ここから下を編集する必要はありません -->
 

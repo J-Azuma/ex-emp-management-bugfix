@@ -52,49 +52,28 @@ public class EmployeeController {
 	 * @return 従業員一覧画面
 	 */
 	@RequestMapping("/showList")
-	public String showList(Integer page, Model model) {
+	public String showList(String name, Integer page, Model model) {
 		if (page == null) {
 			page = 1;
 		}
-		List<Employee> employeeList = employeeService.showList(page);
+		if (name == null) {
+			name = "";
+		}
+		List<Employee> employeeList = employeeService.showList(name, page);
 		model.addAttribute("employeeList", employeeList);
 		
 		List<Integer> totalPages = new ArrayList<>();
-		for (int i = 1; i <= employeeService.getTotalPages(); i++) {
+		for (int i = 1; i <= employeeService.getTotalPages(name); i++) {
 			totalPages.add(i);
 		}
-		
+		model.addAttribute("employeeList", employeeList);
+		model.addAttribute("name", name);
 		model.addAttribute("totalPages", totalPages);
 		System.out.println(totalPages.size());
 		return "employee/list";
 	}
 	
-	/**
-	 * 従業員を名前であいまい検索.
-	 * 
-	 * @param name 検索用の名前
-	 * @param model リクエストスコープに値を渡すためのオブジェクト
-	 * @return 従業員一覧画面に検索結果を表示
-	 */
-	@RequestMapping("/fizzySearchByName")
-	public String fizzySearchByName(String name,Model model, Integer page){
-		if (page == null) {
-			page = 1;
-		}
-		List<Employee> employeeList = employeeService.fizzySearchByName(name, page);
-		if (employeeList.size() == 0) {
-			model.addAttribute("message", "1件もありませんでした。");
-			employeeList = employeeService.showList(page);
-		}
-		
-		List<Integer> totalPages = new ArrayList<>();
-		for (int i = 1; i <= employeeService.getTotalPagesForSearch(name); i++) {
-			totalPages.add(i);
-		}
-		model.addAttribute("employeeList", employeeList);
-		model.addAttribute("totalPages", totalPages);
-		return "employee/list";
-	}
+	
 
 	
 	/////////////////////////////////////////////////////
@@ -144,13 +123,16 @@ public class EmployeeController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="/suggest", method= RequestMethod.POST)
-	public Map<String, List<String>> suggest(Integer page) {
+	public Map<String, List<String>> suggest(String name, Integer page) {
 		if (page == null) {
 			page = 1;
 		}
+		if (name == null) {
+			name = "";
+		}
 		Map<String, List<String>> map = new HashMap<>();
 		List<String> employeeNameList = new ArrayList<>();
-		List<Employee> employeeList = employeeService.showList(page);
+		List<Employee> employeeList = employeeService.showList(name, page);
 		for (Employee employee : employeeList) {
 			employeeNameList.add(employee.getName());
 		}

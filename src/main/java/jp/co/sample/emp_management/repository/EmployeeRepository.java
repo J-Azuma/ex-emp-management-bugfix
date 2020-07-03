@@ -45,23 +45,35 @@ public class EmployeeRepository {
 	private NamedParameterJdbcTemplate template;
 
 	/**
-	 * 従業員一覧情報を入社日順で取得します.
+	 * 従業員を名前であいまい検索.(全件検索も兼ねる)
 	 * 
-	 * @return 全従業員一覧 従業員が存在しない場合はサイズ0件の従業員一覧を返します
+	 * @param name 検索用の名前
+	 * @return 検索結果を格納したリスト
 	 */
-	public List<Employee> findAll(int page) {
-		String sql = "SELECT id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count "
-				+ " FROM employees order by hire_date limit 10 offset :num;";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("num", 10 * (page - 1));
+	public List<Employee> findByName(String name, Integer page) {
+		
+		//name=nullの場合、自動的に全件検索になる
+		String sql = "select id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count "
+				+    " FROM employees WHERE name like :name order by hire_date limit 10 offset :page;";
+		name = "%" + name + "%";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("name", name).addValue("page", page);
 		List<Employee> employeeList = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
-
 		return employeeList;
 	}
 
-	public int getTotalPages() {
+	/**
+	 * 総ページ数取得.
+	 * 
+	 * @param name 検索用の名前
+	 * @return 検索結果のページ数
+	 */
+	public int getTotalPagesForSearch(String name) {
+		List<Employee> employeeList = null;
 		String sql = "select id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count"
-				+ " from employees;";
-		List<Employee> employeeList = template.query(sql, EMPLOYEE_ROW_MAPPER);
+				+ " from employees where name like :name order by hire_date;";
+		name = "%" + name + "%";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("name", name);
+		employeeList = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
 		int totalPages = 0;
 		if (employeeList.size() % 10 != 0) {
 			totalPages = (int) (Math.ceil(employeeList.size() / 10)) + 1;
@@ -98,41 +110,4 @@ public class EmployeeRepository {
 		template.update(updateSql, param);
 	}
 
-	/**
-	 * 従業員を名前であいまい検索.
-	 * 
-	 * @param name 検索用の名前
-	 * @return 検索結果を格納したリスト
-	 */
-	public List<Employee> fizzySearchByName(String name, Integer page) {
-		
-		String sql = "select id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count "
-				+    " FROM employees WHERE name like :name order by hire_date limit 10 offset :num;";
-		name = "%" + name + "%";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("name", name).addValue("num", 10 * (page -1));
-		List<Employee> employeeList = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
-		return employeeList;
-	}
-
-	public int getTotalPagesForSearch(String name) {
-		List<Employee> employeeList = null;
-		if (name == null) {
-			String sql = "select id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count"
-					+    " from employees order by hire_date;";
-			employeeList = template.query(sql, EMPLOYEE_ROW_MAPPER);
-		} else {
-			String sql = "select id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count"
-					+ " from employees where name like :name order by hire_date;";
-			name = "%" + name + "%";
-			SqlParameterSource param = new MapSqlParameterSource().addValue("name", name);
-		    employeeList = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
-		}
-		int totalPages = 0;
-		if (employeeList.size() % 10 != 0) {
-			totalPages = (int) (Math.ceil(employeeList.size() / 10)) + 1;
-		} else {
-			totalPages = (int) (Math.ceil(employeeList.size() / 10));
-		}
-		return totalPages;
-	}
 }

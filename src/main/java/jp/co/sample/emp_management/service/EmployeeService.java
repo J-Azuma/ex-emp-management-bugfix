@@ -27,8 +27,9 @@ public class EmployeeService {
 	 * 
 	 * @return　従業員情報一覧
 	 */
-	public List<Employee> showList(int page) {
-		List<Employee> employeeList = employeeRepository.findAll(page);
+	public List<Employee> showList(String name, Integer page) {
+		page = 10 * (page - 1);
+		List<Employee> employeeList = employeeRepository.findByName(name, page);
 		return employeeList;
 	}
 	
@@ -52,16 +53,14 @@ public class EmployeeService {
 	public void update(Employee employee) {
 		employeeRepository.update(employee);
 	}
-	
-	public List<Employee> fizzySearchByName(String name, Integer page) {
-		return employeeRepository.fizzySearchByName(name, page);
-	}
-	
-	public int getTotalPages() {
-		return employeeRepository.getTotalPages();
-	}
-	
-	public int getTotalPagesForSearch(String name) {
+	/**
+	 * 検索結果の総ページ数を取得.
+	 * 
+	 * @param name 検索用の名前
+	 * @return 総ページ数
+	 */
+	public int getTotalPages(String name) {
 		return employeeRepository.getTotalPagesForSearch(name);
 	}
+
 }
